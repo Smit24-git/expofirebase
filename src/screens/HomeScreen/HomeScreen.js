@@ -42,10 +42,32 @@ function HomeScreen2({ navigation }) {
           <Card.Content>
             <Title>{item.title}</Title>
             <Paragraph>{item.full_description}</Paragraph>
+            <Paragraph> <b>Venue: </b> {item.location || "Contact us to find nearby venues around your area."}</Paragraph>
+            
+            <Paragraph><b>Date: </b>{item.date || "Unavailable at this moment"}</Paragraph>
           </Card.Content>
           <Card.Cover source={{ uri: item.featured_image }} />
           <Card.Actions>
-            <Button>Edit</Button>
+            {/* <Button
+             onPress={() => navigation.navigate('Update')}>
+               Edit
+            </Button> */}
+            <Button
+              onPress={() => {
+                console.log('form data: ', item.title);
+                const entityID = new Date().toISOString().replace(".", "_");
+                firebase.database().ref('meals/' + item.id).remove()
+                  .then(() => {
+                    console.log("Removed...");
+                  })
+                  .catch((error) => {
+                    alert(error)
+                  });
+  
+                }}>
+                Delete
+            </Button>
+            <Paragraph style={{float: "right"}} >${item.price || 5}</Paragraph>
           </Card.Actions>
         </Card>
       </View>
@@ -169,7 +191,62 @@ function DetailsScreen({ navigation }) {
 
               textInputProps: {
                 keyboardType: 'default',
+                autoCapitalize: 'none',
+              },
+            },
+            {
+              type: 'input',
 
+              name: 'price',
+
+              label: 'Price',
+
+              rules: {
+                required: {
+                  value: true,
+                },
+              },
+
+              textInputProps: {
+                keyboardType: 'default',
+                autoCapitalize: 'none',
+              },
+            },
+            
+            {
+              type: 'input',
+
+              name: 'location',
+
+              label: 'Venue of the event',
+
+              rules: {
+                required: {
+                  value: true,
+                },
+              },
+
+              textInputProps: {
+                keyboardType: 'default',
+                autoCapitalize: 'none',
+              },
+            },
+            
+            {
+              type: 'input',
+
+              name: 'date',
+
+              label: 'Event Date',
+
+              rules: {
+                required: {
+                  value: true,
+                },
+              },
+
+              textInputProps: {
+                keyboardType: 'default',
                 autoCapitalize: 'none',
               },
             },
